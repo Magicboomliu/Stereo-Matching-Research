@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 
+# max_disp = max_disp //2 : 初始状态
+
 class CostVolume(nn.Module):
     def __init__(self, max_disp, feature_similarity='correlation'):
         """Construct cost volume based on different
@@ -71,11 +73,11 @@ class CostVolumePyramid(nn.Module):
 
         cost_volume_pyramid = []       # generate a cost_volume_pyrmid
         for s in range(num_scales):
-            max_disp = self.max_disp // (2 ** s) # s=0 is the orginal Size
+            max_disp = self.max_disp // (2 ** s) # s=0 is  H/2
             # 分别计算不同分辨率下的cost
             cost_volume_module = CostVolume(max_disp, self.feature_similarity)
             cost_volume = cost_volume_module(left_feature_pyramid[s],
                                              right_feature_pyramid[s])
             cost_volume_pyramid.append(cost_volume)
 
-        return cost_volume_pyramid  # H/3, H/6, H/12
+        return cost_volume_pyramid  # H/2, H/4, H/8
